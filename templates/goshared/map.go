@@ -10,26 +10,26 @@ const mapTpl = `
 	{{ if $r.GetMinPairs }}
 		{{ if eq $r.GetMinPairs $r.GetMaxPairs }}
 			if len({{ accessor . }}) != {{ $r.GetMinPairs }} {
-				err := {{ err . "value must contain exactly " $r.GetMinPairs " pair(s)" }}
+				err := {{ err . (t "map.pairs" "value must contain exactly {{$1}} pair(s)" $r.GetMinPairs) }}
 				if !all { return err }
 				errors = append(errors, err)
 			}
 		{{ else if $r.MaxPairs }}
 			if l := len({{ accessor . }}); l < {{ $r.GetMinPairs }} || l > {{ $r.GetMaxPairs }} {
-				err := {{ err . "value must contain between " $r.GetMinPairs " and " $r.GetMaxPairs " pairs, inclusive" }}
+				err := {{ err . (t "map.pairs_between" "value must contain between {{$1}} and {{$2}} pairs, inclusive" $r.GetMinPairs $r.GetMaxPairs) }}
 				if !all { return err }
 				errors = append(errors, err)
 			}
 		{{ else }}
 			if len({{ accessor . }}) < {{ $r.GetMinPairs }} {
-				err := {{ err . "value must contain at least " $r.GetMinPairs " pair(s)" }}
+				err := {{ err . (t "map.min_pairs" "value must contain at least {{$1}} pair(s)" $r.GetMinPairs) }}
 				if !all { return err }
 				errors = append(errors, err)
 			}
 		{{ end }}
 	{{ else if $r.MaxPairs }}
 		if len({{ accessor . }}) > {{ $r.GetMaxPairs }} {
-			err := {{ err . "value must contain no more than " $r.GetMaxPairs " pair(s)" }}
+			err := {{ err . (t "map.max_pairs" "value must contain no more than {{$1}} pair(s)" $r.GetMaxPairs) }}
 			if !all { return err }
 			errors = append(errors, err)
 		}
@@ -51,7 +51,7 @@ const mapTpl = `
 
 				{{ if $r.GetNoSparse }}
 					if val == nil {
-						err := {{ errIdx . "key" "value cannot be sparse, all pairs must be non-nil" }}
+						err := {{ errIdx . "key" (t "map.no_sparse" "value cannot be sparse, all pairs must be non-nil") }}
 						if !all { return err }
 						errors = append(errors, err)
 					}

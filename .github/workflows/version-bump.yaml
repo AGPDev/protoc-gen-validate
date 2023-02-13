@@ -18,9 +18,10 @@ on:
           - patch
 
 env:
+  NAME: deploy
   PRERELEASE: ${{github.event.inputs.prerelease}}
   DEFAULT_BUMP: ${{github.event.inputs.bump}}
-  APP_ID: 257305
+  APP_ID: 293113
 
 jobs:
   build:

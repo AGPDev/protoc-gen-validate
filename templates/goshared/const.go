@@ -6,7 +6,7 @@ const constTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 			{{- if isEnum $f }}
 			err := {{ err . "value must equal " (enumVal $f $r.GetConst) }}
 			{{- else }}
-			err := {{ err . "value must equal " $r.GetConst }}
+			err := {{ err . (t "<prefix>.const" "value must equal {{$1}}" $r.GetConst) }}
 			{{- end }}
 			if !all { return err }
 			errors = append(errors, err)

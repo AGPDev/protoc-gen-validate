@@ -6,7 +6,7 @@ const inTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 			{{- if isEnum $f }}
 			err := {{ err . "value must be in list " (enumList $f $r.In) }}
 			{{- else }}
-			err := {{ err . "value must be in list " $r.In }}
+			err := {{ err . (t "<prefix>.in" "value must be in list {{$1}}" $r.In) }}
 			{{- end }}
 			if !all { return err }
 			errors = append(errors, err)
@@ -16,7 +16,7 @@ const inTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 			{{- if isEnum $f }}
 			err := {{ err . "value must not be in list " (enumList $f $r.NotIn) }}
 			{{- else }}
-			err := {{ err . "value must not be in list " $r.NotIn }}
+			err := {{ err . (t "<prefix>.not_in" "value must not be in list {{$1}}" $r.NotIn) }}
 			{{- end }}
 			if !all { return err }
 			errors = append(errors, err)

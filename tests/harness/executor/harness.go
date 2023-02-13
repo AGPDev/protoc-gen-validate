@@ -19,7 +19,7 @@ import (
 func Harnesses(goFlag, ccFlag, javaFlag, pythonFlag bool, externalHarnessFlag string) []Harness {
 	harnesses := make([]Harness, 0)
 	if goFlag {
-		harnesses = append(harnesses, InitHarness("tests/harness/go/main/go-harness", "go"))
+		harnesses = append(harnesses, InitHarness("tests/harness/go/main/go-harness", "go").WithMsgTests())
 	}
 	if ccFlag {
 		harnesses = append(harnesses, InitHarness("tests/harness/cc/cc-harness", "cc"))
@@ -37,8 +37,14 @@ func Harnesses(goFlag, ccFlag, javaFlag, pythonFlag bool, externalHarnessFlag st
 }
 
 type Harness struct {
-	Name string
-	Exec func(context.Context, io.Reader) (*harness.TestResult, error)
+	Name        string
+	Exec        func(context.Context, io.Reader) (*harness.TestResult, error)
+	TestErrMsgs bool
+}
+
+func (h Harness) WithMsgTests() Harness {
+	h.TestErrMsgs = true
+	return h
 }
 
 func InitHarness(cmd string, name string, args ...string) Harness {
