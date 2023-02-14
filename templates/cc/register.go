@@ -7,7 +7,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/envoyproxy/protoc-gen-validate/templates/shared"
+	"github.com/AGPDev/protoc-gen-validate/templates/shared"
 	"github.com/iancoleman/strcase"
 	pgs "github.com/lyft/protoc-gen-star/v2"
 	pgsgo "github.com/lyft/protoc-gen-star/v2/lang/go"

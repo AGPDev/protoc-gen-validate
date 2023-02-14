@@ -63,8 +63,8 @@ def go_third_party():
         version = "v1.1.0",
     )
     go_repository(
-        name = "com_github_envoyproxy_go_control_plane",
-        importpath = "github.com/envoyproxy/go-control-plane",
+        name = "com_github_AGPDev_go_control_plane",
+        importpath = "github.com/AGPDev/go-control-plane",
         sum = "h1:EmNYJhPYy0pOFjCx2PrgtaBXmee0iUX9hLlxE1xHOJE=",
         version = "v0.9.9-0.20201210154907-fd9021fe5dad",
     )

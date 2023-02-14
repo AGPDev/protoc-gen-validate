@@ -4,9 +4,9 @@ import (
 	"math"
 	"time"
 
-	cases "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/go"
-	other_package "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/other_package/go"
-	yet_another_package "github.com/envoyproxy/protoc-gen-validate/tests/harness/cases/yet_another_package/go"
+	cases "github.com/AGPDev/protoc-gen-validate/tests/harness/cases/go"
+	other_package "github.com/AGPDev/protoc-gen-validate/tests/harness/cases/other_package/go"
+	yet_another_package "github.com/AGPDev/protoc-gen-validate/tests/harness/cases/yet_another_package/go"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/anypb"
 	"google.golang.org/protobuf/types/known/durationpb"
@@ -281,8 +281,8 @@ var int64Cases = []TestCase{
 
 	{"int64 - ignore_empty gte & lte - valid", &cases.Int64Ignore{Val: 0}, 0, ""},
 
-	{"int64 optional - lte - valid", &cases.Int64LTEOptional{Val: &wrapperspbpb.Int64(63).Value}, 0, ""},
-	{"int64 optional - lte - valid (equal)", &cases.Int64LTEOptional{Val: &wrapperspbpb.Int64(64).Value}, 0, ""},
+	{"int64 optional - lte - valid", &cases.Int64LTEOptional{Val: &wrapperspb.Int64(63).Value}, 0, ""},
+	{"int64 optional - lte - valid (equal)", &cases.Int64LTEOptional{Val: &wrapperspb.Int64(64).Value}, 0, ""},
 	{"int64 optional - lte - valid (unset)", &cases.Int64LTEOptional{}, 0, ""},
 }
 
@@ -1055,12 +1055,17 @@ var messageCases = []TestCase{
 	{"message - skip - valid", &cases.MessageSkip{Val: &cases.TestMsg{}}, 0, ""},
 
 	{"message - required - valid", &cases.MessageRequired{Val: &cases.TestMsg{Const: "foo"}}, 0, ""},
+	{"message - required - valid (oneof)", &cases.MessageRequiredOneof{One: &cases.MessageRequiredOneof_Val{&cases.TestMsg{Const: "foo"}}}, 0, ""},
 	{"message - required - invalid", &cases.MessageRequired{}, 1, "invalid MessageRequired.Val: value is required"},
+	{"message - required - invalid (oneof)", &cases.MessageRequiredOneof{}, 1, ""},
 
 	{"message - cross-package embed none - valid", &cases.MessageCrossPackage{Val: &other_package.Embed{Val: 1}}, 0, ""},
 	{"message - cross-package embed none - valid (nil)", &cases.MessageCrossPackage{}, 0, ""},
 	{"message - cross-package embed none - invalid (empty)", &cases.MessageCrossPackage{Val: &other_package.Embed{}}, 1, "invalid MessageCrossPackage.Val: embedded message failed validation | caused by: invalid Embed.Val: value must be greater than 0"},
 	{"message - cross-package embed none - invalid", &cases.MessageCrossPackage{Val: &other_package.Embed{Val: -1}}, 1, "invalid MessageCrossPackage.Val: embedded message failed validation | caused by: invalid Embed.Val: value must be greater than 0"},
+
+	{"message - required - valid", &cases.MessageRequiredButOptional{Val: &cases.TestMsg{Const: "foo"}}, 0, ""},
+	{"message - required - valid (unset)", &cases.MessageRequiredButOptional{}, 0, ""},
 }
 
 var repeatedCases = []TestCase{
@@ -1119,6 +1124,11 @@ var repeatedCases = []TestCase{
 	{"repeated - items - invalid (embedded enum not_in)", &cases.RepeatedEmbeddedEnumNotIn{Val: []cases.RepeatedEmbeddedEnumNotIn_AnotherNotInEnum{0}}, 1, "invalid RepeatedEmbeddedEnumNotIn.Val[0]: value must not be in list [0]"},
 	{"repeated - items - valid (embedded enum not_in)", &cases.RepeatedEmbeddedEnumNotIn{Val: []cases.RepeatedEmbeddedEnumNotIn_AnotherNotInEnum{1}}, 0, ""},
 
+	{"repeated - items - invalid (any in)", &cases.RepeatedAnyIn{Val: []*anypb.Any{{TypeUrl: "type.googleapis.com/google.protobuf.Timestamp"}}}, 1, ""},
+	{"repeated - items - valid (any in)", &cases.RepeatedAnyIn{Val: []*anypb.Any{{TypeUrl: "type.googleapis.com/google.protobuf.Duration"}}}, 0, ""},
+	{"repeated - items - invalid (any not_in)", &cases.RepeatedAnyNotIn{Val: []*anypb.Any{{TypeUrl: "type.googleapis.com/google.protobuf.Timestamp"}}}, 1, ""},
+	{"repeated - items - valid (any not_in)", &cases.RepeatedAnyNotIn{Val: []*anypb.Any{{TypeUrl: "type.googleapis.com/google.protobuf.Duration"}}}, 0, ""},
+
 	{"repeated - embed skip - valid", &cases.RepeatedEmbedSkip{Val: []*cases.Embed{{Val: 1}}}, 0, ""},
 	{"repeated - embed skip - valid (invalid element)", &cases.RepeatedEmbedSkip{Val: []*cases.Embed{{Val: -1}}}, 0, ""},
 	{"repeated - min and items len - valid", &cases.RepeatedMinAndItemLen{Val: []string{"aaa", "bbb"}}, 0, ""},
@@ -1171,7 +1181,7 @@ var mapCases = []TestCase{
 	{"map - values - valid", &cases.MapValues{Val: map[string]string{"a": "Alpha", "b": "Beta"}}, 0, ""},
 	{"map - values - valid (empty)", &cases.MapValues{Val: map[string]string{}}, 0, ""},
 	{"map - values - valid (pattern)", &cases.MapValuesPattern{Val: map[string]string{"a": "A"}}, 0, ""},
-	{"map - values - invalid", &cases.MapValues{Val: map[string]string{"a": "A", "b": "BCD"}}, 1, "invalid MapValues.Val[a]: value length must be at least 3 runes"},
+	{"map - values - invalid", &cases.MapValues{Val: map[string]string{"a": "A", "b": "B"}}, 2, "invalid MapValues.Val[a]: value length must be at least 3 runes"},
 	{"map - values - invalid (pattern)", &cases.MapValuesPattern{Val: map[string]string{"a": "A", "b": "!@#$%^&*()"}}, 1, "invalid MapValuesPattern.Val[b]: value does not match regex pattern \"(?i)^[a-z0-9]+$\""},
 
 	{"map - recursive - valid", &cases.MapRecursive{Val: map[uint32]*cases.MapRecursive_Msg{1: {Val: "abc"}}}, 0, ""},
@@ -1426,7 +1436,7 @@ var anyCases = []TestCase{
 var kitchenSink = []TestCase{
 	{"kitchensink - field - valid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Const: "abcd", IntConst: 5, BoolConst: false, FloatVal: &wrapperspb.FloatValue{Value: 1}, DurVal: &durationpb.Duration{Seconds: 3}, TsVal: &timestamppb.Timestamp{Seconds: 17}, FloatConst: 7, DoubleIn: 123, EnumConst: cases.ComplexTestEnum_ComplexTWO, AnyVal: &anypb.Any{TypeUrl: "type.googleapis.com/google.protobuf.Duration"}, RepTsVal: []*timestamppb.Timestamp{{Seconds: 3}}, MapVal: map[int32]string{-1: "a", -2: "b"}, BytesVal: []byte("\x00\x99"), O: &cases.ComplexTestMsg_X{X: "foobar"}}}, 0, ""},
 	{"kitchensink - valid (unset)", &cases.KitchenSinkMessage{}, 0, ""},
-	{"kitchensink - field - invalid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{}}, 1, "invalid KitchenSinkMessage.Val: embedded message failed validation | caused by: invalid ComplexTestMsg.Const: value must equal abcd"},
+	{"kitchensink - field - invalid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{}}, 7, "invalid KitchenSinkMessage.Val: embedded message failed validation | caused by: invalid ComplexTestMsg.Const: value must equal abcd"},
 	{"kitchensink - field - embedded - invalid", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Another: &cases.ComplexTestMsg{}}}, 1, "invalid KitchenSinkMessage.Val: embedded message failed validation | caused by: invalid ComplexTestMsg.Const: value must equal abcd"},
 	{"kitchensink - field - invalid (transitive)", &cases.KitchenSinkMessage{Val: &cases.ComplexTestMsg{Const: "abcd", BoolConst: true, Nested: &cases.ComplexTestMsg{}}}, 1, "invalid KitchenSinkMessage.Val: embedded message failed validation | caused by: invalid ComplexTestMsg.Nested: embedded message failed validation | caused by: invalid ComplexTestMsg.Const: value must equal abcd"},
 

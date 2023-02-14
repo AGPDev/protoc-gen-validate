@@ -8,5 +8,5 @@ const wrapperTpl = `{{ $f := .Field }}{{ $r := .Rules }}
 				{{- render (unwrap .) }}
 			}
 			{{ if .MessageRules.GetRequired }} else {
-				throw new io.envoyproxy.pgv.ValidationException("{{ $f }}", "null", "is required");
+				throw new io.AGPDev.pgv.ValidationException("{{ $f }}", "null", "is required");
 			} {{ end }}`

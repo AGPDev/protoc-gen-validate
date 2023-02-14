@@ -3,7 +3,7 @@ package ccnop
 import (
 	"text/template"
 
-	"github.com/envoyproxy/protoc-gen-validate/templates/cc"
+	"github.com/AGPDev/protoc-gen-validate/templates/cc"
 	pgs "github.com/lyft/protoc-gen-star/v2"
 )
 

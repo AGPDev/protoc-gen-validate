@@ -1,7 +1,7 @@
 package shared
 
 import (
-	"github.com/envoyproxy/protoc-gen-validate/validate"
+	"github.com/AGPDev/protoc-gen-validate/validate"
 	pgs "github.com/lyft/protoc-gen-star/v2"
 )
 

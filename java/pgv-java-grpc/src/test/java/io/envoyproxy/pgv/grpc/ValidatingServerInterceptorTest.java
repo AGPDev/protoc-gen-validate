@@ -1,16 +1,16 @@
-package io.envoyproxy.pgv.grpc;
+package io.AGPDev.pgv.grpc;
 
 import com.google.protobuf.Any;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.rpc.BadRequest;
 import com.google.rpc.Status;
-import io.envoyproxy.pgv.ReflectiveValidatorIndex;
-import io.envoyproxy.pgv.ValidationException;
-import io.envoyproxy.pgv.Validator;
-import io.envoyproxy.pgv.ValidatorIndex;
-import io.envoyproxy.pgv.grpc.asubpackage.GreeterGrpc;
-import io.envoyproxy.pgv.grpc.asubpackage.HelloJKRequest;
-import io.envoyproxy.pgv.grpc.asubpackage.HelloResponse;
+import io.AGPDev.pgv.ReflectiveValidatorIndex;
+import io.AGPDev.pgv.ValidationException;
+import io.AGPDev.pgv.Validator;
+import io.AGPDev.pgv.ValidatorIndex;
+import io.AGPDev.pgv.grpc.asubpackage.GreeterGrpc;
+import io.AGPDev.pgv.grpc.asubpackage.HelloJKRequest;
+import io.AGPDev.pgv.grpc.asubpackage.HelloResponse;
 import io.grpc.BindableService;
 import io.grpc.ServerInterceptors;
 import io.grpc.StatusRuntimeException;
@@ -93,13 +93,13 @@ public class ValidatingServerInterceptorTest {
         GreeterGrpc.GreeterBlockingStub stub = GreeterGrpc.newBlockingStub(serverRule.getChannel());
 
         assertThatExceptionOfType(StatusRuntimeException.class).isThrownBy(() -> stub.sayHello(HelloJKRequest.newBuilder().setName("Bananas").build()))
-                .withMessageStartingWith("INVALID_ARGUMENT: .io.envoyproxy.pgv.grpc.HelloJKRequest.name: must equal World")
+                .withMessageStartingWith("INVALID_ARGUMENT: .io.AGPDev.pgv.grpc.HelloJKRequest.name: must equal World")
                 .has(new Condition<>(e -> {
                     try {
                         Status status = StatusProto.fromThrowable(e);
                         Any any = status.getDetailsList().get(0);
                         BadRequest badRequest = any.unpack(BadRequest.class);
-                        return badRequest.getFieldViolationsCount() == 1 && badRequest.getFieldViolations(0).getField().equals(".io.envoyproxy.pgv.grpc.HelloJKRequest.name")
+                        return badRequest.getFieldViolationsCount() == 1 && badRequest.getFieldViolations(0).getField().equals(".io.AGPDev.pgv.grpc.HelloJKRequest.name")
                                 && badRequest.getFieldViolations(0).getDescription().equals("must equal World");
                     } catch (InvalidProtocolBufferException ex) {
                         return false;

@@ -1,10 +1,10 @@
-package io.envoyproxy.pgv;
+package io.AGPDev.pgv;
 
 import com.google.re2j.Pattern;
 import org.junit.Test;
 
-import static io.envoyproxy.pgv.Assertions.assertValidationException;
-import static io.envoyproxy.pgv.StringValidation.uuid;
+import static io.AGPDev.pgv.Assertions.assertValidationException;
+import static io.AGPDev.pgv.StringValidation.uuid;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class StringValidationTest {

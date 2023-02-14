@@ -13,7 +13,7 @@ import (
 	"google.golang.org/protobuf/types/known/durationpb"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
-	"github.com/envoyproxy/protoc-gen-validate/templates/shared"
+	"github.com/AGPDev/protoc-gen-validate/templates/shared"
 	pgs "github.com/lyft/protoc-gen-star/v2"
 	pgsgo "github.com/lyft/protoc-gen-star/v2/lang/go"
 	"github.com/qor/i18n"
@@ -87,10 +87,10 @@ func Register(tpl *template.Template, params pgs.Parameters) {
 	template.Must(tpl.New("string").Funcs(i18nBuilder("string")).Parse(strTpl))
 	template.Must(tpl.New("bytes").Funcs(i18nBuilder("bytes")).Parse(bytesTpl))
 
-	template.Must(tpl.New("email").Parse(emailTpl))
-	template.Must(tpl.New("hostname").Parse(hostTpl))
-	template.Must(tpl.New("address").Parse(hostTpl))
-	template.Must(tpl.New("uuid").Parse(uuidTpl))
+	template.Must(tpl.New("email").Funcs(i18nBuilder("email")).Parse(emailTpl))
+	template.Must(tpl.New("hostname").Funcs(i18nBuilder("hostname")).Parse(hostTpl))
+	template.Must(tpl.New("address").Funcs(i18nBuilder("address")).Parse(hostTpl))
+	template.Must(tpl.New("uuid").Funcs(i18nBuilder("uuid")).Parse(uuidTpl))
 
 	template.Must(tpl.New("enum").Funcs(i18nBuilder("enum")).Parse(enumTpl))
 	template.Must(tpl.New("repeated").Funcs(i18nBuilder("repeated")).Parse(repTpl))
